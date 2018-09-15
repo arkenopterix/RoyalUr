@@ -30,3 +30,10 @@ class Board:
         # function purpose: Check if the given position is a valid square on the board
         # input: - position: Value of the position of which we want to check the existence
         return position in self.boardDic
+
+    def removePawn(self,position):
+        # function purpose: Remove pawn from the board for a given board position
+        # input: - position: label of one of the board squares
+        if( not self.checkIsValidPosition(position)): return "invalid position"
+        self.boardDic[position][0] = 0
+        return "OK"
