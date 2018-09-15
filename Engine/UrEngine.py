@@ -24,7 +24,7 @@ class UrEngine:
         couldAddPawn = False
         if(playerNum ==1):
             if(self.availablePawnsPlayer1Count > 0):
-                scopeResult = self.scopeThroughBoard(moveValue,"A1",1)
+                scopeResult = self.scopeThroughBoard(moveValue,"forward","A1",1)
                 if (scopeResult[0] == "MoveOK"):
                     self.board.placePawn(1,scopeResult[1])
                     self.availablePawnsPlayer1Count -= self.availablePawnsPlayer1Count
@@ -37,7 +37,7 @@ class UrEngine:
                 print("Error: no available pawns for player 1")
         else:
             if (self.availablePawnsPlayer2Count > 0):
-                scopeResult = self.scopeThroughBoard(moveValue, "B1", 1)
+                scopeResult = self.scopeThroughBoard(moveValue,"forward", "B1", 1)
                 if (scopeResult[0] == "MoveOK"):
                     self.board.placePawn(2, scopeResult[1])
                     self.availablePawnsPlayer2Count -= self.availablePawnsPlayer2Count
@@ -55,10 +55,73 @@ class UrEngine:
         #  input: - moveValue: number of squares the pawn will move
         #        - pawnPosition: current position of the pawn on the board
         #        - playerNum: player number
-        if ( playerNum ==1):
-            pass
+
+        scopeResult = self.scopeThroughBoard(moveValue, "forward", pawnPosition,playerNum)
+        # Check the result of the scope function and perform the necessary actions
+        if (scopeResult[0]=="PawnSafe"): #The pawn will move to safety
+
+            if(playerNum == 1):
+                # remove the pawn from the board
+                self.board.removePawn(pawnPosition)
+
+                #add the pawn to the safe pawn counter
+                self.safePawnsPlayer1Count = self.safePawnsPlayer1Count + 1
+            else:
+                # remove the pawn from the board
+                self.board.removePawn(pawnPosition)
+
+                # add the pawn to the safe pawn counter
+                self.safePawnsPlayer2Count = self.safePawnsPlayer2Count + 1
+            return "MoveOK"
+        elif(scopeResult[0]=="MoveOK"):
+
+            if (playerNum == 1):
+                # remove the pawn from the board
+                self.board.removePawn(pawnPosition)
+
+                # Move the pawn to the new postition
+                self.board.placePawn(1,scopeResult[1])
+
+            else:
+                # remove the pawn from the board
+                self.board.removePawn(pawnPosition)
+
+                # Move the pawn to the new postition
+                self.board.placePawn(2, scopeResult[1])
+            return "MoveOK"
+        elif(scopeResult[0] == "MoveKO"):
+            return "MoveKO"
+        elif (scopeResult[0] == "MoveReplace"):
+
+            if (playerNum == 1):
+                # remove the pawn from the board
+                self.board.removePawn(pawnPosition)
+
+                # Move the pawn to the new postition
+                self.board.placePawn(1, scopeResult[1])
+
+                # replace the others player's pawn in his availablePawnCounter
+                self.availablePawnsPlayer2Count += self.availablePawnsPlayer2Count
+
+            else:
+
+                # remove the pawn from the board
+                self.board.removePawn(pawnPosition)
+
+                # Move the pawn to the new postition
+                self.board.placePawn(2, scopeResult[1])
+
+                # replace the others player's pawn in his availablePawnCounter
+                self.availablePawnsPlayer1Count += self.availablePawnsPlayer1Count
+            return "MoveOK"
+        elif (scopeResult[0] == "ERROR"):
+            print("ERROR:movePlayerPawn: error in scopeThroughBoard function ")
+            return "Error"
         else:
-            pass
+            print("ERROR:movePlayerPawn: scopeThroughBoard function result invalid")
+            return "Error"
+
+
 
 
 
@@ -102,8 +165,10 @@ class UrEngine:
                 return self.scopeThroughBoard(moveValue - 1,"backward", nextPawnPosition, playerNum)
             else:
                 print("ERROR:scopeThroughBoard: incorrect move value")
+                return ["ERROR", ""]
         else:
             print("ERROR:scopeThroughBoard: incorrect direction value")
+            return ["ERROR", ""]
 
 
     def printGame(self):
