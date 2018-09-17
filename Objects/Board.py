@@ -5,7 +5,7 @@ class Board:
 ##############constructeur##################
     def __init__(self):
         #self.boardTab = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        self.boardDic = {"A1":[0,"A2"],"A2":[0,"A3"],"A3":[0,"A4"],"A4":[0,"C1"],"A5":[0,"A6","C8"],"A6":[0,"Safe","A5"],"B5":[0,"B6","C8"],"B6":[0,"Safe","B5"],"B1":[0,"B2"],"B2":[0,"B3"],"B3":[0,"B4"],"B4":[0,"C1"],"C1":[0,"C2"],"C2":[0,"C3"],"C3":[0,"C4"],"C4":[0,"C5"],"C5":[0,"C6"],"C6":[0,"C7","C5"],"C7":[0,"C8","C6"],"C8":[0,["B5","A5","C7"]]}
+        self.boardDic = {"A1":[0,"A2"],"A2":[0,"A3"],"A3":[0,"A4"],"A4":[0,"C1"],"A5":[0,"A6","C8"],"A6":[0,"Safe","A5"],"B5":[0,"B6","C8"],"B6":[0,"Safe","B5"],"B1":[0,"B2"],"B2":[0,"B3"],"B3":[0,"B4"],"B4":[0,"C1"],"C1":[0,"C2"],"C2":[0,"C3"],"C3":[0,"C4"],"C4":[0,"C5"],"C5":[0,"C6"],"C6":[0,"C7","C5"],"C7":[0,"C8","C6"],"C8":[0,"B5","A5","C7"]}
 
     def show(self):
         # function purpose: Pretty print the board
@@ -37,3 +37,31 @@ class Board:
         if( not self.checkIsValidPosition(position)): return "invalid position"
         self.boardDic[position][0] = 0
         return "OK"
+
+    def getSquareState(self,position):
+        # function purpose: returns the state of the square at the given position (0:not used 1: Player1 pawn 2: Player2 pawn)
+        # input: - position: label of one of the board squares
+        if (not self.checkIsValidPosition(position)): return "invalid position"
+        return self.boardDic[position][0]
+
+    def getNextSquare(self,player,position):
+        # function purpose: returns the square that is next to the given one on the board (going forward) depending on the player
+        # input: - position: label of one of the board squares
+        #        - player: player number
+        if (not self.checkIsValidPosition(position)): return "invalid position"
+        if (not 0<player<3): return "invalid player number"
+        if (position == "C8"):
+            if (player == 1):
+                return self.boardDic[position][2]
+            else:
+                return self.boardDic[position][1]
+        else:
+            return self.boardDic[position][1]
+
+    def getPreviousSquare(self,player,position):
+        # function purpose: returns the square previous to the given one on the board (going forward) depending on the player
+        # input: - position: label of one of the board squares
+        #        - player: player number
+        if (not self.checkIsValidPosition(position)): return "invalid position"
+        if (not 0 < player < 3): return "invalid player number"
+        return self.boardDic[position][2]
