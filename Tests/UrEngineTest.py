@@ -3,7 +3,7 @@ from Engine.UrEngine import *
 import unittest
 
 game=UrEngine()
-game.printGame()
+#game.printGame()
 
 class TestUrEngineMethods(unittest.TestCase):
 
@@ -25,6 +25,13 @@ class TestUrEngineMethods(unittest.TestCase):
         self.assertEqual(game2.scopeThroughBoard(4,"forward","A2",1),["MoveKO",""])
         self.assertEqual(game2.scopeThroughBoard(3,"forward","B1",2),['MoveOK', 'B4'])
         self.assertEqual(game2.scopeThroughBoard(3, "forward", "A2", 1), ['MoveReplace', 'C1'])
+        self.assertEqual(game2.scopeThroughBoard(2, "forward", "C7", 2), ['MoveOK', 'B5'])
+        self.assertEqual(game2.scopeThroughBoard(2, "forward", "C7", 1), ['MoveOK', 'A5'])
+
+        # self.assertEqual(game2.scopeThroughBoard(4, "forward", "A5", 1), ['MoveOK', 'A5'])
+
+
+
 
 
 if __name__ == '__main__':
