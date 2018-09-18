@@ -21,33 +21,49 @@ class UrEngine:
         # input: - playerNum: player number
         #        - moveValue: number of squares the pawn will move
         # return: [couldAddPawn ; resultSquare]
+
         couldAddPawn = False
+
         if(playerNum ==1):
+
             if(self.availablePawnsPlayer1Count > 0):
+
                 scopeResult = self.scopeThroughBoard(moveValue,"forward","A1",1)
+
                 if (scopeResult[0] == "MoveOK"):
+
                     self.board.placePawn(1,scopeResult[1])
                     self.availablePawnsPlayer1Count -= self.availablePawnsPlayer1Count
                     couldAddPawn = True
+
                 elif (scopeResult[0] == "MoveKO"):
+
                     pass
+
                 else:
                     print("could not add pawn: weird case after board scope")
             else:
                 print("Error: no available pawns for player 1")
         else:
+
             if (self.availablePawnsPlayer2Count > 0):
+
                 scopeResult = self.scopeThroughBoard(moveValue,"forward", "B1", 1)
+
                 if (scopeResult[0] == "MoveOK"):
+
                     self.board.placePawn(2, scopeResult[1])
                     self.availablePawnsPlayer2Count -= self.availablePawnsPlayer2Count
                     couldAddPawn = True
+
                 elif (scopeResult[0] == "MoveKO"):
                     pass
+
                 else:
                     print("could not add pawn: weird case after board scope")
             else:
                 print("Error: no available pawns for player 2")
+
         return couldAddPawn
 
     def movePlayerPawn(self,moveValue, pawnPosition, playerNum):
@@ -57,7 +73,9 @@ class UrEngine:
         #        - playerNum: player number
 
         scopeResult = self.scopeThroughBoard(moveValue, "forward", pawnPosition,playerNum)
+
         # Check the result of the scope function and perform the necessary actions
+
         if (scopeResult[0]=="PawnSafe"): #The pawn will move to safety
 
             if(playerNum == 1):
@@ -72,7 +90,9 @@ class UrEngine:
 
                 # add the pawn to the safe pawn counter
                 self.safePawnsPlayer2Count = self.safePawnsPlayer2Count + 1
+
             return "MoveOK"
+
         elif(scopeResult[0]=="MoveOK"):
 
             if (playerNum == 1):
@@ -88,9 +108,13 @@ class UrEngine:
 
                 # Move the pawn to the new postition
                 self.board.placePawn(2, scopeResult[1])
+
             return "MoveOK"
+
         elif(scopeResult[0] == "MoveKO"):
+
             return "MoveKO"
+
         elif (scopeResult[0] == "MoveReplace"):
 
             if (playerNum == 1):
@@ -113,12 +137,19 @@ class UrEngine:
 
                 # replace the others player's pawn in his availablePawnCounter
                 self.availablePawnsPlayer1Count += self.availablePawnsPlayer1Count
+
             return "MoveOK"
+
         elif (scopeResult[0] == "ERROR"):
+
             print("ERROR:movePlayerPawn: error in scopeThroughBoard function ")
+
             return "Error"
+
         else:
+
             print("ERROR:movePlayerPawn: scopeThroughBoard function result invalid")
+
             return "Error"
 
 
@@ -132,42 +163,73 @@ class UrEngine:
         #        - pawnPosition: current position of the pawn on the board
         #        - playerNum: player number
         if(direction == "forward"):
-            nextPawnPosition = self.board.boardDic[pawnPosition][1]
+
+            nextPawnPosition = self.board.getNextSquare(playerNum,pawnPosition)
 
             if(moveValue == 1):
+
                if( nextPawnPosition == "Safe"): #Pawn can be placed off the board
+
                    return ["PawnSafe",""]
+
                else:
+
                   return self.scopeThroughBoard(moveValue-1,"forward",nextPawnPosition,playerNum)
+
             elif(moveValue == 0): #the pawn has finished moving
+
                 if(self.board.boardDic[pawnPosition][0] == 0 ): #there is no pawn on the targeted square
+
                     return ["MoveOK",pawnPosition]
+
                 elif(self.board.boardDic[pawnPosition][0] == playerNum ): # the square is already occupied by one of the players pawns
+
                     return ["MoveKO",""]
                 else:
+
                     return  ["MoveReplace",pawnPosition]
+
             else: # if the pawn hasn't finished it's move, continue tu scope through the board
+
                 if(nextPawnPosition == "Safe"):
+
                     return self.scopeThroughBoard(moveValue - 1,"backward", self.board.boardDic[pawnPosition][2], playerNum)
+
                 else:
+
                     return self.scopeThroughBoard(moveValue - 1,"forward", nextPawnPosition,playerNum)
+
         elif(direction == "backward"):
-            nextPawnPosition = self.board.boardDic[pawnPosition][2]
+
+            nextPawnPosition = self.board.getPreviousSquare(playerNum,pawnPosition)
+
             if(moveValue == 0):
+
                 if (self.board.boardDic[pawnPosition][0] == 0):  # there is no pawn on the targeted square
+
                     return ["MoveOK", pawnPosition]
-                elif (self.board.boardDic[pawnPosition][
-                          0] == playerNum):  # the square is already occupied by one of the players pawns
+
+                elif (self.board.boardDic[pawnPosition][0] == playerNum):  # the square is already occupied by one of the players pawns
+
                     return ["MoveKO", ""]
                 else:
+
                     return ["MoveReplace", pawnPosition]
+
             elif(moveValue > 0):
+
                 return self.scopeThroughBoard(moveValue - 1,"backward", nextPawnPosition, playerNum)
+
             else:
+
                 print("ERROR:scopeThroughBoard: incorrect move value")
+
                 return ["ERROR", ""]
+
         else:
+
             print("ERROR:scopeThroughBoard: incorrect direction value")
+
             return ["ERROR", ""]
 
 
