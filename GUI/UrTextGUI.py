@@ -35,9 +35,19 @@ currentPlayer = 1
 while(gameIsOn):
 
     game.printGame()
-    print("Your turn player %s",currentPlayer)
+    print("Your turn player %s"% (currentPlayer))
     rollresult = dice.roll()
-    print("Roll of dice: %s",rollresult)
+    print("Roll of dice: %s" % (rollresult))
 
-    action = input("Actions: - AddPawn\b -Move [board square]")
+    actionInput = input("Actions: - AddPawn\b -Move [board square] $>")
 
+    action = parseAction(actionInput)
+
+    if(action[0] == "AddPawn"):
+        print(action)
+    elif(action[0] == "Move"):
+        print(action)
+    else:
+        print("action invalid")
+
+    print("")
