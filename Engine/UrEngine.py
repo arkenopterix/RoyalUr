@@ -33,7 +33,7 @@ class UrEngine:
                 if (scopeResult[0] == "MoveOK"):
 
                     self.board.placePawn(1,scopeResult[1])
-                    self.availablePawnsPlayer1Count -= self.availablePawnsPlayer1Count
+                    self.availablePawnsPlayer1Count -= 1
                     couldAddPawn = True
 
                 elif (scopeResult[0] == "MoveKO"):
@@ -53,7 +53,7 @@ class UrEngine:
                 if (scopeResult[0] == "MoveOK"):
 
                     self.board.placePawn(2, scopeResult[1])
-                    self.availablePawnsPlayer2Count -= self.availablePawnsPlayer2Count
+                    self.availablePawnsPlayer2Count -= 1
                     couldAddPawn = True
 
                 elif (scopeResult[0] == "MoveKO"):
@@ -71,6 +71,8 @@ class UrEngine:
         #  input: - moveValue: number of squares the pawn will move
         #        - pawnPosition: current position of the pawn on the board
         #        - playerNum: player number
+
+        if(self.board.getSquareState(pawnPosition) != playerNum): return "MoveKO"
 
         scopeResult = self.scopeThroughBoard(moveValue, "forward", pawnPosition,playerNum)
 
