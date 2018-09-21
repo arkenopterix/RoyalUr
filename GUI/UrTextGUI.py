@@ -39,15 +39,32 @@ while(gameIsOn):
     rollresult = dice.roll()
     print("Roll of dice: %s" % (rollresult))
 
-    actionInput = input("Actions: - AddPawn\b -Move [board square] $>")
+    actionInput = input("Actions: - AddPawn \b -Move [board square] $> ")
 
     action = parseAction(actionInput)
+    actionResult = ""
 
-    if(action[0] == "AddPawn"):
-        print(action)
-    elif(action[0] == "Move"):
-        print(action)
+    actionWasComplete = False
+    if(rollresult == 0):
+        print("The roll result was 0, next player")
     else:
-        print("action invalid")
+        if(action[0] == "AddPawn"):
+            print(action)
+            actionResult = game.playerAddPawn(currentPlayer,rollresult)
+            actionWasComplete = actionResult
+        elif(action[0] == "Move"):
+            print(action)
+            moveResult = game.movePlayerPawn(rollresult,action[1],currentPlayer)
+            if(moveResult == "MoveOK"):
+                actionWasComplete = True
+            else:
+                pass
+        else:
+            print("action invalid")
 
     print("")
+    if(actionResult == ""):
+        print("invalid command please retry...")
+
+    if(actionWasComplete):
+        currentPlayer = changePlayer(currentPlayer)
