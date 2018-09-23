@@ -20,9 +20,9 @@ class UrEngine:
         # function purpose: Function that adds a pawn on the board for the given player
         # input: - playerNum: player number
         #        - moveValue: number of squares the pawn will move
-        # return: [couldAddPawn ; resultSquare]
+        # return: couldAddPawn
 
-        couldAddPawn = False
+        couldAddPawn = "MoveKO"
 
         if(playerNum ==1):
 
@@ -34,7 +34,13 @@ class UrEngine:
 
                     self.board.placePawn(1,scopeResult[1])
                     self.availablePawnsPlayer1Count -= 1
-                    couldAddPawn = True
+                    couldAddPawn = "MoveOK"
+
+                elif (scopeResult[0] == "MoveOKReplay"):
+
+                    self.board.placePawn(1,scopeResult[1])
+                    self.availablePawnsPlayer1Count -= 1
+                    couldAddPawn = "MoveOKReplay"
 
                 elif (scopeResult[0] == "MoveKO"):
 
@@ -54,7 +60,13 @@ class UrEngine:
 
                     self.board.placePawn(2, scopeResult[1])
                     self.availablePawnsPlayer2Count -= 1
-                    couldAddPawn = True
+                    couldAddPawn = "MoveOK"
+
+                elif (scopeResult[0] == "MoveOKReplay"):
+
+                    self.board.placePawn(2, scopeResult[1])
+                    self.availablePawnsPlayer2Count -= 1
+                    couldAddPawn = "MoveOKReplay"
 
                 elif (scopeResult[0] == "MoveKO"):
                     pass
@@ -112,6 +124,24 @@ class UrEngine:
                 self.board.placePawn(2, scopeResult[1])
 
             return "MoveOK"
+
+        elif (scopeResult[0] == "MoveOKReplay"):
+
+            if (playerNum == 1):
+                # remove the pawn from the board
+                self.board.removePawn(pawnPosition)
+
+                # Move the pawn to the new postition
+                self.board.placePawn(1, scopeResult[1])
+
+            else:
+                # remove the pawn from the board
+                self.board.removePawn(pawnPosition)
+
+                # Move the pawn to the new postition
+                self.board.placePawn(2, scopeResult[1])
+
+            return "MoveOKReplay"
 
         elif(scopeResult[0] == "MoveKO"):
 
@@ -182,14 +212,27 @@ class UrEngine:
 
                 if(self.board.boardDic[pawnPosition][0] == 0 ): #there is no pawn on the targeted square
 
-                    return ["MoveOK",pawnPosition]
+                    if(self.board.isSpecialSquare(pawnPosition)):#Is the targeted square a special one
+
+                        return ["MoveOKReplay", pawnPosition]#if yes, move and replay
+
+                    else:
+
+                        return ["MoveOK",pawnPosition]
 
                 elif(self.board.boardDic[pawnPosition][0] == playerNum ): # the square is already occupied by one of the players pawns
 
                     return ["MoveKO",""]
-                else:
 
-                    return  ["MoveReplace",pawnPosition]
+                else: #the square is occupied by the opponents pawn
+
+                    if (self.board.isSpecialSquare(pawnPosition)):
+
+                        return ["MoveKO", ""]#The player can't replace the opponents pawn on a special square
+
+                    else:
+                        return ["MoveReplace", pawnPosition]
+
 
             else: # if the pawn hasn't finished it's move, continue tu scope through the board
 
@@ -209,14 +252,25 @@ class UrEngine:
 
                 if (self.board.boardDic[pawnPosition][0] == 0):  # there is no pawn on the targeted square
 
-                    return ["MoveOK", pawnPosition]
+                    if (self.board.isSpecialSquare(pawnPosition)):  # Is the targeted square a special one
+
+                        return ["MoveOKReplay", pawnPosition]  # if yes, move and replay
+
+                    else:
+
+                        return ["MoveOK", pawnPosition]
 
                 elif (self.board.boardDic[pawnPosition][0] == playerNum):  # the square is already occupied by one of the players pawns
 
                     return ["MoveKO", ""]
                 else:
 
-                    return ["MoveReplace", pawnPosition]
+                    if (self.board.isSpecialSquare(pawnPosition)):
+
+                        return ["MoveKO", ""]  # The player can't replace the opponents pawn on a special square
+
+                    else:
+                        return ["MoveReplace", pawnPosition]
 
             elif(moveValue > 0):
 

@@ -12,8 +12,8 @@ class TestUrEngineMethods(unittest.TestCase):
 
     def testUREngine_AddPawn(self):
         game1 = UrEngine()
-        self.assertTrue(game1.playerAddPawn(1,1))
-        self.assertTrue(game1.playerAddPawn(2,2))
+        self.assertEqual(game1.playerAddPawn(1,1),"MoveOK")
+        self.assertEqual(game1.playerAddPawn(2,2),"MoveOK")
         #game.printGame()
 
     def testUrEngine_scopeThroughBoard(self):
@@ -24,12 +24,13 @@ class TestUrEngineMethods(unittest.TestCase):
         game2.board.placePawn(1, "C2")
 
         self.assertEqual(game2.scopeThroughBoard(4,"forward","A2",1),["MoveKO",""])
-        self.assertEqual(game2.scopeThroughBoard(3,"forward","B1",2),['MoveOK', 'B4'])
+        self.assertEqual(game2.scopeThroughBoard(3,"forward","B1",2),['MoveOKReplay', 'B4'])
         self.assertEqual(game2.scopeThroughBoard(3, "forward", "A2", 1), ['MoveReplace', 'C1'])
         self.assertEqual(game2.scopeThroughBoard(2, "forward", "C7", 2), ['MoveOK', 'B5'])
         self.assertEqual(game2.scopeThroughBoard(2, "forward", "C7", 1), ['MoveOK', 'A5'])
         self.assertEqual(game2.scopeThroughBoard(2,"backward", "B6",2),['MoveOK','C8'])
         self.assertEqual(game2.scopeThroughBoard(2, "forward", "B5", 2), ['PawnSafe', ''])
+
 
         # self.assertEqual(game2.scopeThroughBoard(4, "forward", "A5", 1), ['MoveOK', 'A5'])
     def testUrEngine_movePlayerPawn(self):

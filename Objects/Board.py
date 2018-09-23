@@ -6,6 +6,7 @@ class Board:
     def __init__(self):
         #self.boardTab = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self.boardDic = {"A1":[0,"A2"],"A2":[0,"A3"],"A3":[0,"A4"],"A4":[0,"C1"],"A5":[0,"A6","C8"],"A6":[0,"Safe","A5"],"B5":[0,"B6","C8"],"B6":[0,"Safe","B5"],"B1":[0,"B2"],"B2":[0,"B3"],"B3":[0,"B4"],"B4":[0,"C1"],"C1":[0,"C2"],"C2":[0,"C3"],"C3":[0,"C4"],"C4":[0,"C5"],"C5":[0,"C6"],"C6":[0,"C7","C5"],"C7":[0,"C8","C6"],"C8":[0,"B5","A5","C7"]}
+        self.specialSquares = ["A4","B4","C4"]
 
     def show(self):
         # function purpose: Pretty print the board
@@ -65,3 +66,8 @@ class Board:
         if (not self.checkIsValidPosition(position)): return "invalid position"
         if (not 0 < player < 3): return "invalid player number"
         return self.boardDic[position][2]
+
+    def isSpecialSquare(self,position):
+        # function purpose: Indicates if the given square on the board is a special square
+        # input: - position: label of one of the board squares
+        return position in self.specialSquares

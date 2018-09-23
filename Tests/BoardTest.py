@@ -50,5 +50,10 @@ class TestBoardMethods(unittest.TestCase):
         self.assertEqual(board5.getPreviousSquare(1,"A5"),"C8")
         self.assertEqual(board5.getPreviousSquare(1, "B5"), "C8")
 
+    def testBoard_getIsSpecialSquare(self):
+        board6= Board()
+        self.assertEqual(board6.isSpecialSquare("C4"),True)
+        self.assertEqual(board6.isSpecialSquare("C8"),False)
+
 if __name__ == '__main__':
         unittest.main()
