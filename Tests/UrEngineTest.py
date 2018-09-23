@@ -22,6 +22,7 @@ class TestUrEngineMethods(unittest.TestCase):
         game2.board.placePawn(2, "B3")
         game2.board.placePawn(2, "C1")
         game2.board.placePawn(1, "C2")
+        game2.board.placePawn(1, "C4")
 
         self.assertEqual(game2.scopeThroughBoard(4,"forward","A2",1),["MoveKO",""])
         self.assertEqual(game2.scopeThroughBoard(3,"forward","B1",2),['MoveOKReplay', 'B4'])
@@ -30,6 +31,7 @@ class TestUrEngineMethods(unittest.TestCase):
         self.assertEqual(game2.scopeThroughBoard(2, "forward", "C7", 1), ['MoveOK', 'A5'])
         self.assertEqual(game2.scopeThroughBoard(2,"backward", "B6",2),['MoveOK','C8'])
         self.assertEqual(game2.scopeThroughBoard(2, "forward", "B5", 2), ['PawnSafe', ''])
+        self.assertEqual(game2.scopeThroughBoard(4, "forward", "B4", 2), ['MoveKO', ''])
 
 
         # self.assertEqual(game2.scopeThroughBoard(4, "forward", "A5", 1), ['MoveOK', 'A5'])
